@@ -16,7 +16,7 @@ export default function App() {
   return (
     <Authenticator.Provider>
       <Authenticator>
-        <View style={styles.container}>
+        <View className="flex-1, bg-#fff1 align-middle justify-center">
           <SignOutButton />
         </View>
       </Authenticator>
