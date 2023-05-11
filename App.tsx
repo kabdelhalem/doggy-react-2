@@ -1,25 +1,40 @@
-import {StatusBar} from "expo-status-bar";
-import {Text, View, Button} from "react-native";
-import {Amplify} from "aws-amplify";
-import {Authenticator, useAuthenticator} from "@aws-amplify/ui-react-native";
+import Home from "./src/pages/home";
+import {NavigationContainer} from "@react-navigation/native";
+import {MyTabs} from "./src/navigation/navbar";
+import {createStackNavigator} from "@react-navigation/stack";
+import Auth from "./src/pages/auth";
+import OnboardingPage from "./src/pages/onboarding";
+import {useEffect, useState} from "react";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
-import awsExports from "./src/aws-exports.js";
-
-Amplify.configure(awsExports);
-
-function SignOutButton() {
-  const {signOut} = useAuthenticator();
-  return <Button title="Sign Out" onPress={signOut} />;
-}
+const AppStack = createStackNavigator();
 
 export default function App() {
-  return (
-    <Authenticator.Provider>
-      <Authenticator>
-        <View className="flex-1, bg-#fff1 align-middle justify-center">
-          <SignOutButton />
-        </View>
-      </Authenticator>
-    </Authenticator.Provider>
-  );
+  const {isFirstLaunched, setIsFirstLaunched} = useState(null);
+
+  useEffect(() => {
+    AsyncStorage.getItem("alreadyLaunched").then((value) => {
+      if (value === null) {
+        AsyncStorage.setItem("alreadyLaunched", "true");
+        setIsFirstLaunched(true);
+      } else {
+        setIsFirstLaunched(false);
+      }
+    });
+  }, []);
+
+  if (isFirstLaunched === null) {
+    return null;
+  } else if (isFirstLaunched === true) {
+    return (
+      <NavigationContainer independent={true}>
+        <AppStack.Navigator>
+          <AppStack.Screen name="Onboarding" component={OnboardingPage} />
+          <AppStack.Screen name="Auth" component={Auth} />
+        </AppStack.Navigator>
+      </NavigationContainer>
+    );
+  } else {
+    return <Auth />;
+  }
 }
