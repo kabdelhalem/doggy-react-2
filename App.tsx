@@ -2,7 +2,7 @@ import Home from "./src/pages/home";
 import {NavigationContainer} from "@react-navigation/native";
 import {MyTabs} from "./src/navigation/navbar";
 import {createStackNavigator} from "@react-navigation/stack";
-import Auth from "./src/pages/auth";
+import Auth from "./src/auth/auth";
 import OnboardingPage from "./src/pages/onboarding";
 import {useEffect, useState} from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
